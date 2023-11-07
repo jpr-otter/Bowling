@@ -6,15 +6,30 @@ namespace bowling
 	public class Frame
 	{
 		
-		public int[] PinsRolled { get; set; }
+		public int[] PinsKnockedDown { get; set; }
 		public int Score { get; set; }
+		private int Number { get; set; }
+
 		
-		public Frame()
+		public Frame(int paraNumber)
 		{
 			//Console.WriteLine("Let's roll!");
 			Score = 0;
-			PinsRolled = new int[2];
+			PinsKnockedDown = new int[] { -1, -1, -1};
+			Number = paraNumber;
 			
+		}
+		public bool IsStrike()
+		{
+			return PinsKnockedDown[0] == 10;			
+		}
+		public bool IsSpare()
+		{
+			return PinsKnockedDown[0] + PinsKnockedDown[1] == 10;
+		}
+		public void addRoll()
+		{
+
 		}
 	}
 }

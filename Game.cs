@@ -11,11 +11,12 @@ namespace bowling
         {
             for (int i = 0; i < Frames.Length; i++)
             {
-                Frames[i] = new Frame();
+                Frames[i] = new Frame(i + 1);
+
             }
         }
         public Frame CurrentFrame()
-        {
+        {            
             return Frames[currentFrame];
         }
 
@@ -75,20 +76,20 @@ namespace bowling
 
             Frame frame = Frames[currentFrame];
 
-            if (frame.PinsRolled[0] == 0)
+            if (frame.PinsKnockedDown[0] == -1)
             {
-                frame.PinsRolled[0] = pins;
+                frame.PinsKnockedDown[0] = pins;
                 frame.Score += pins; // Aktualisiert die Punktzahl
                 Console.WriteLine($"First roll: {pins}");
                 Console.WriteLine($"Frame {currentFrame + 1} score: {frame.Score}");
                 if (pins == 10) // Strike
                 {
                     Console.WriteLine("Strike!");
-                    if (currentFrame > 0 && Frames[currentFrame - 1].PinsRolled[0] == 10) // Double
+                    if (currentFrame > 0 && Frames[currentFrame - 1].PinsKnockedDown[0] == 10) // Double
                     {
                         Frames[currentFrame - 1].Score += pins;
                         Console.WriteLine("Double!");
-                        if (currentFrame > 1 && Frames[currentFrame - 2].PinsRolled[0] == 10) // Turkey
+                        if (currentFrame > 1 && Frames[currentFrame - 2].PinsKnockedDown[0] == 10) // Turkey
                         {
                             Frames[currentFrame - 2].Score += pins;
                             Console.WriteLine("Turkey!");
@@ -98,29 +99,29 @@ namespace bowling
                 }
             }
 
-            else if (frame.PinsRolled[1] == 0)
+            else if (frame.PinsKnockedDown[1] == 0)
             {
-                frame.PinsRolled[1] = pins;
+                frame.PinsKnockedDown[1] = pins;
                 frame.Score += pins; // Aktualisiert die Punktzahl
                 Console.WriteLine($"Second roll: {pins}");
                 Console.WriteLine($"Frame {currentFrame + 1} score: {frame.Score}");
 
-                if (frame.PinsRolled[0] + pins == 10) // Spare
+                if (frame.PinsKnockedDown[0] + pins == 10) // Spare
                 {
                     Console.WriteLine("Spare!");
                 }
                 Console.WriteLine($"Frame {currentFrame + 1} score: {frame.Score}");
 
                 // Überprüft ob der vorherige Wurf ein Spare war
-                if (currentFrame > 0 && Frames[currentFrame - 1].PinsRolled[0] + Frames[currentFrame - 1].PinsRolled[1] == 10)
+                if (currentFrame > 0 && Frames[currentFrame - 1].PinsKnockedDown[0] + Frames[currentFrame - 1].PinsKnockedDown[1] == 10)
                 {
                     Frames[currentFrame - 1].Score += pins;
                     Console.WriteLine("Adding points to previous frame's score due to spare.");
                 }
 
-                if (currentFrame == Frames.Length - 1 && (frame.PinsRolled[0] == 10 || frame.PinsRolled[0] + frame.PinsRolled[1] == 10)) // Last frame and it's a strike or a spare
-                {
-                    
+                else if (currentFrame == Frames.Length - 1 && (frame.PinsKnockedDown[0] == 10 || frame.PinsKnockedDown[0] + frame.PinsKnockedDown[1] == 10)) // Last frame and it's a strike or a spare
+                {   
+                    //this doesnt make any sense. the condition for the third roll yet no score is updated
                     return; // Do not increment currentFrame to allow a third roll
                 }
 
@@ -128,15 +129,43 @@ namespace bowling
             }
             else // Third roll in the last frame
             {
-                frame.PinsRolled[2] = pins;
+                // never gets used...
+                frame.PinsKnockedDown[2] = pins;
                 frame.Score += pins;
                 Console.WriteLine($"Third roll: {pins}");
                 Console.WriteLine($"Frame {currentFrame + 1} score: {frame.Score}");
                 currentFrame++;
+                Console.WriteLine("TEST");
+            }
+            if (frame.PinsKnockedDown[2] == 0 && currentFrame == 10)
+            {
+
+                Console.WriteLine($"Current frame: {currentFrame}");
+                frame.PinsKnockedDown[2] = pins;
+                frame.Score += pins;
+                Console.WriteLine($"Third roll: {pins}");
+                Console.WriteLine($"Frame {currentFrame + 1} score: {frame.Score}");
+
+                if (pins == 10) // Strike
+                {
+                    Console.WriteLine("Strike!");
+                    if (currentFrame > 0 && Frames[currentFrame - 1].PinsKnockedDown[0] == 10) // Double
+                    {
+                        Frames[currentFrame - 1].Score += pins;
+                        Console.WriteLine("Double!");
+                        if (currentFrame > 1 && Frames[currentFrame - 2].PinsKnockedDown[0] == 10) // Turkey
+                        {
+                            Frames[currentFrame - 2].Score += pins;
+                            Console.WriteLine("Turkey!");
+                        }
+                    }
+                }
+                currentFrame++;
+                
             }
             Console.WriteLine($"Total score: {TotalScore()}");
 
-            
+
         }            
 
         public int TotalScore()
@@ -153,7 +182,7 @@ namespace bowling
 
         public bool Over()
         {
-            return currentFrame >= Frames.Length;
+            return currentFrame >= Frames.Length ;
         }
     }
 }
