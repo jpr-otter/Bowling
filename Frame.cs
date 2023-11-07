@@ -1,5 +1,6 @@
 using System;
 
+
 namespace bowling
 {
 	internal class Frame
@@ -10,9 +11,10 @@ namespace bowling
 		
 		public Frame()
 		{
-			Console.WriteLine("Let's roll!");
+			//Console.WriteLine("Let's roll!");
 			Score = 0;
 			PinsRolled = new int[10];
+			
 		}
 	}
 }

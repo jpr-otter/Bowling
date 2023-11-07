@@ -15,6 +15,7 @@
                 Game.AddRoll(pins);
 
             }
+            Console.WriteLine("Game Over");
         }
     }
 }
