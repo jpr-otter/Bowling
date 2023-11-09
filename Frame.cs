@@ -89,13 +89,22 @@ namespace bowling
 		
         public int FrameScore()
 		{
+			if (PreviousFrame !=  null && PreviousFrame.IsSpare())
+			{
+				PreviousFrame.Score += PinsKnockedDown[0];
+			}
+			if (PreviousFrame != null && PreviousFrame.IsStrike())
+			{
+				PreviousFrame.Score += PinsKnockedDown[0] + PinsKnockedDown[1];
+			}
+
 			if (ThirdRoll != -1)
 			{			
-				return FirstRoll + SecondRoll + ThirdRoll; 
+				return PinsKnockedDown[0] + PinsKnockedDown[1] + PinsKnockedDown[2]; 
 			}
 			else
 			{
-				return FirstRoll + SecondRoll;
+				return PinsKnockedDown[0] + PinsKnockedDown[1];
 			}
 			//???
 		}
