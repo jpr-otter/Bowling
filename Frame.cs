@@ -51,7 +51,7 @@ namespace bowling
             }
             else if (CurrentTry == 1)
             {
-                if (Number == 10 && IsStrike())
+                if (Number == 10 && (IsStrike() || IsSpare()))
                 {
                     ThirdRoll = pins;
                 }
@@ -78,7 +78,7 @@ namespace bowling
 
             if (IsStrike())
             {
-                if (Number == 10)
+                if (Number == 10 && IsSpare())
                 {
                     BonusScore = ThirdRoll;
                 }
@@ -107,16 +107,16 @@ namespace bowling
             return FirstRoll + SecondRoll + BonusScore;
         }
 
-        public int _Score()
-        {
-            if (ThirdRoll != -1)
-            {
-                return FirstRoll + SecondRoll + ThirdRoll + BonusScore;
-            }
-            else
-            {
-                return FirstRoll + SecondRoll + BonusScore;
-            }
-        }        
+        //public int _Score()
+        //{
+        //    if (ThirdRoll != -1)
+        //    {
+        //        return FirstRoll + SecondRoll + ThirdRoll + BonusScore;
+        //    }
+        //    else
+        //    {
+        //        return FirstRoll + SecondRoll + BonusScore;
+        //    }
+        //}        
     }
 }
