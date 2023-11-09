@@ -15,6 +15,18 @@ namespace bowling
 
             }
         }
+
+        public void AddFrame(int paraNumber)
+        {
+            Frame frame = new (paraNumber);
+            if (currentFrame > 0)
+            {
+                frame.PreviousFrame = Frames[currentFrame - 1];
+            }
+            Frames[currentFrame] = frame;
+            currentFrame++;
+        }
+
         public Frame CurrentFrame()
         {            
             return Frames[currentFrame];
