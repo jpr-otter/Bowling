@@ -5,47 +5,43 @@ namespace bowling
     {
         private readonly Frame[] Frames = new Frame[10];
         private int currentFrame;
-        
+
 
         public Game()
         {
-            for (int i = 0; i < Frames.Length; i++)
+            for (int i = 9; i >= 0; i--)
             {
                 Frames[i] = new Frame(i + 1);
-                if ( i > 0 )
+                if (i < Frames.Length - 1)
                 {
-                    Frames[i].PreviousFrame = Frames[i - 1];   
+                    Frames[i].NextFrame = Frames[i + 1];
                 }
-
             }
         }
-              
-        public void AddRoll (int pins)
+
+        public void AddRoll(int pins)
         {
             Frames[currentFrame].AddRoll(pins);
             Console.WriteLine($"Current Frame: {currentFrame}");
-            if (Frames[currentFrame].IsStrike() || Frames[currentFrame].CurrentTry == 2)
+            if ((Frames[currentFrame].IsStrike() && Frames[currentFrame].Number != 10) || Frames[currentFrame].CurrentTry == 2)
             {
                 currentFrame++;
             }
-            //if (Frames[currentFrame].FirstRoll != -1 && Frames[currentFrame].SecondRoll != -1)
-            //{
-            //    currentFrame++;
-            //}
-        }        
+      
+        }
 
         public Frame CurrentFrame()
-        {            
+        {
             return Frames[currentFrame];
-        }                   
+        }
 
         public int TotalScore()
         {
             int totalScore = 0;
-            foreach ( Frame frame in Frames )
+            foreach (Frame frame in Frames)
             {
-                totalScore += frame.FrameScore();
-                Console.WriteLine(frame.FrameScore());
+                totalScore += frame.Score();
+                Console.WriteLine(frame.Score());
             }
             // Lambda, sonst forloop 
             //return Frames.Sum(x => x.Score);
@@ -54,7 +50,7 @@ namespace bowling
 
         public bool Over()
         {
-            return currentFrame >= Frames.Length ;
+            return currentFrame >= Frames.Length;
         }
     }
 }

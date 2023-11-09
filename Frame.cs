@@ -2,110 +2,113 @@ using System;
 
 namespace bowling
 {
-	public class Frame
-	{		
-		public int Number { get; set; }
-		public int BonusScore { get; set; }
-		public int FirstRoll { get; set; }
-		public int SecondRoll { get; set; }
-		public int ThirdRoll { get; set; }
-		public Frame PreviousFrame { get; set; }
-		public int CurrentTry {  get; set; }
-		
-		public Frame(int paraNumber)
-		{
-			FirstRoll = 0;
-			SecondRoll = 0;
-			ThirdRoll = -1;			
-			Number = paraNumber;
-			CurrentTry = 0;
-		}
+    public class Frame
+    {
+        public int Number { get; set; }
+        public int BonusScore { get; set; }
+        public int FirstRoll { get; set; }
+        public int SecondRoll { get; set; }
+        public int ThirdRoll { get; set; }
+        public Frame NextFrame { get; set; }
+        public int CurrentTry { get; set; }
 
-		public int CurrentFrame() 
-		{			
-			return Number;
-		}		
+        public Frame(int paraNumber)
+        {
+            FirstRoll = 0;
+            SecondRoll = 0;
+            ThirdRoll = -1;
+            Number = paraNumber;
+            CurrentTry = 0;
+        }
 
-		
+        public int CurrentFrame()
+        {
+            return Number;
+        }
 
-		public bool IsStrike()
-		{			
-			return FirstRoll == 10;			
-		}
 
-		public bool IsSpare()
-		{
-			return FirstRoll + SecondRoll == 10;
-		}
 
-		public bool IsDouble()
-		{
-			return IsStrike() && PreviousFrame != null && PreviousFrame.IsStrike();		
-		}
+        public bool IsStrike()
+        {
+            return FirstRoll == 10;
+        }
 
-		public bool IsTurkey()
-		{
-			_ = PreviousFrame;
-			Frame twoFramesBefore = PreviousFrame.PreviousFrame;
-			return PreviousFrame != null && IsStrike() && PreviousFrame.IsStrike() && twoFramesBefore != null && twoFramesBefore.IsStrike();
+        public bool IsSpare()
+        {
+            if (IsStrike())
+            {
+                return false;
+            }
+            return FirstRoll + SecondRoll == 10;
+        }
 
-		}
+        public void AddRoll(int pins)
+        {
+            if (CurrentTry == 0)
+            {
+                FirstRoll = pins;
+                CurrentTry++;
+            }
+            else if (CurrentTry == 1)
+            {
+                if (Number == 10 && IsStrike())
+                {
+                    ThirdRoll = pins;
+                }
+                else if (IsStrike())
+                {
+                    throw new Exception("Ist ein Strike geht nicht");
+                }
 
-		public void AddRoll(int pins)
-		{
-			if (CurrentTry == 0) 
-			{
-				FirstRoll = pins;
-				CurrentTry++;
-			}
-			else if (CurrentTry == 1)
-			{
-				SecondRoll = pins;
-				CurrentTry++;
-			}			
-			else 
-			{                
-                throw new Exception("Nur zwei Würfe zulässig"); 
-			}
-			if (Number == 10 && IsStrike())
-			{
-				ThirdRoll = pins;
-			}
-			
-		}  
-		
-        public int FrameScore()
-		{
-			if (PreviousFrame != null)
-			{
-				BonusScore = PreviousFrame.FrameScore();
-			}
-			else BonusScore = 0;	
-			
-			if (PreviousFrame !=  null && PreviousFrame.IsSpare())
-			{
-				
-				BonusScore += FirstRoll;
-			}
+                SecondRoll = pins;
+                CurrentTry++;
+            }
+            else
+            {
+                throw new Exception("Nur zwei Würfe zulässig");
+            }
+        }
 
-			if (PreviousFrame != null && PreviousFrame.IsStrike())
-			{
-				
-                BonusScore += FirstRoll + (CurrentTry < 1 ? SecondRoll : 0);
+        public int Score()
+        {            
+            if (IsSpare() && Number != 10)
+            {
+                BonusScore = NextFrame.FirstRoll;
             }
 
-			if (ThirdRoll != -1)
-			{			
-				return FirstRoll + SecondRoll + ThirdRoll + BonusScore; 
-			}
-			else
-			{
-				return FirstRoll + SecondRoll + BonusScore;
-			}			
-		}
+            if (IsStrike())
+            {
+                if (Number == 10)
+                {
+                    BonusScore = ThirdRoll;
+                }
+                else
+                {
+                    if (NextFrame.IsStrike())
+                    {
+                        BonusScore = NextFrame.FirstRoll;
+                        if(Number == 9)
+                        {
+                            BonusScore += NextFrame.ThirdRoll;
+                        }
+                        else
+                        {
+                            BonusScore += NextFrame.NextFrame.FirstRoll;
+                        }
+                    }
+                    else
+                    {
+                        BonusScore = NextFrame.FirstRoll;
+                        BonusScore += NextFrame.SecondRoll;
+                    }
+                }
+            }
 
-		public int Score()
-		{
+            return FirstRoll + SecondRoll + BonusScore;
+        }
+
+        public int _Score()
+        {
             if (ThirdRoll != -1)
             {
                 return FirstRoll + SecondRoll + ThirdRoll + BonusScore;
@@ -114,9 +117,6 @@ namespace bowling
             {
                 return FirstRoll + SecondRoll + BonusScore;
             }
-        }
-
-		//next steps: use the methods from framesClass.
-		// how should i use those?
-	}
+        }        
+    }
 }

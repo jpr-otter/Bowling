@@ -20,10 +20,10 @@
             //Game.AddRoll(0);
             //Game.AddRoll(1);
             //Game.AddRoll(7);
-            for (int i = 1; i <= 10; i++)
-            {
-                Game.AddRoll(10);
-            }
+            //for (int i = 0; i <= 10; i++)
+            //{
+            //    Game.AddRoll(10);
+            //}
             //Game.AddRoll(10);
             //Game.AddRoll(10);
             //Game.AddRoll(5);
