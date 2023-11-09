@@ -3,52 +3,39 @@ using System;
 namespace bowling
 {
 	public class Frame
-	{
-		
-		public int[] PinsKnockedDown { get; set; }
-		public int Score { get; set; }
+	{		
 		public int Number { get; set; }
 		public int BonusScore { get; set; }
 		public int FirstRoll { get; set; }
 		public int SecondRoll { get; set; }
 		public int ThirdRoll { get; set; }
 		public Frame PreviousFrame { get; set; }
-		
+		public int CurrentTry {  get; set; }
 		
 		public Frame(int paraNumber)
 		{
-			FirstRoll = -1;
-			SecondRoll = -1;
-			ThirdRoll = -1;
-			Score = 0;
-			PinsKnockedDown = new int[] { FirstRoll, SecondRoll, ThirdRoll};
-			Number = paraNumber;			
-						
+			FirstRoll = 0;
+			SecondRoll = 0;
+			ThirdRoll = -1;			
+			Number = paraNumber;
+			CurrentTry = 0;
 		}
 
-		public int CurrentFrameIs() 
-		{
+		public int CurrentFrame() 
+		{			
 			return Number;
-		}
+		}		
 
-		// doesnt make any sense...
-		//public int DoubleFrame() 
-		//{
-		//	return Number - 1;
-		//}
-		//public int FrameForTurkey()
-		//{
-		//	return Number - 2; 
-		//}
+		
 
 		public bool IsStrike()
-		{
-			return PinsKnockedDown[0] == 10;			
+		{			
+			return FirstRoll == 10;			
 		}
 
 		public bool IsSpare()
 		{
-			return PinsKnockedDown[0] + PinsKnockedDown[1] == 10;
+			return FirstRoll + SecondRoll == 10;
 		}
 
 		public bool IsDouble()
@@ -66,47 +53,68 @@ namespace bowling
 
 		public void AddRoll(int pins)
 		{
-			if (PinsKnockedDown[0] == FirstRoll) 
+			if (CurrentTry == 0) 
 			{
-				PinsKnockedDown[0] = pins;
+				FirstRoll = pins;
+				CurrentTry++;
 			}
-			else if (PinsKnockedDown[1] == SecondRoll)
+			else if (CurrentTry == 1)
 			{
-				PinsKnockedDown[1] = pins;
-			}
+				SecondRoll = pins;
+				CurrentTry++;
+			}			
 			else 
-			{ 
-				throw new Exception("Nur zwei Würfe zulässig"); 
+			{                
+                throw new Exception("Nur zwei Würfe zulässig"); 
 			}
 			if (Number == 10 && IsStrike())
 			{
-				PinsKnockedDown[2] = pins;
+				ThirdRoll = pins;
 			}
 			
 		}  
 		
         public int FrameScore()
 		{
+			if (PreviousFrame != null)
+			{
+				BonusScore = PreviousFrame.FrameScore();
+			}
+			else BonusScore = 0;	
+			
 			if (PreviousFrame !=  null && PreviousFrame.IsSpare())
 			{
-				PreviousFrame.Score += PinsKnockedDown[0];
+				
+				BonusScore += FirstRoll;
 			}
 
 			if (PreviousFrame != null && PreviousFrame.IsStrike())
 			{
-                PreviousFrame.Score += PinsKnockedDown[0] + (PinsKnockedDown.Length > 1 ? PinsKnockedDown[1] : 0);
+				
+                BonusScore += FirstRoll + (CurrentTry < 1 ? SecondRoll : 0);
             }
 
 			if (ThirdRoll != -1)
 			{			
-				return PinsKnockedDown[0] + PinsKnockedDown[1] + PinsKnockedDown[2]; 
+				return FirstRoll + SecondRoll + ThirdRoll + BonusScore; 
 			}
 			else
 			{
-				return PinsKnockedDown[0] + PinsKnockedDown[1];
-			}
-			//???
+				return FirstRoll + SecondRoll + BonusScore;
+			}			
 		}
+
+		public int Score()
+		{
+            if (ThirdRoll != -1)
+            {
+                return FirstRoll + SecondRoll + ThirdRoll + BonusScore;
+            }
+            else
+            {
+                return FirstRoll + SecondRoll + BonusScore;
+            }
+        }
 
 		//next steps: use the methods from framesClass.
 		// how should i use those?
