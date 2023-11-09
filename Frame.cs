@@ -1,6 +1,4 @@
 using System;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography.X509Certificates;
 
 namespace bowling
 {
@@ -93,10 +91,11 @@ namespace bowling
 			{
 				PreviousFrame.Score += PinsKnockedDown[0];
 			}
+
 			if (PreviousFrame != null && PreviousFrame.IsStrike())
 			{
-				PreviousFrame.Score += PinsKnockedDown[0] + PinsKnockedDown[1];
-			}
+                PreviousFrame.Score += PinsKnockedDown[0] + (PinsKnockedDown.Length > 1 ? PinsKnockedDown[1] : 0);
+            }
 
 			if (ThirdRoll != -1)
 			{			
