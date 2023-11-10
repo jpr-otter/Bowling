@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-
-            Console.WriteLine("Let's roll!");
-            
+            Console.WriteLine("\nLet's roll!\n");
+            Console.WriteLine("__________________________________________________");
+            Console.WriteLine("__________________________________________________");
             var Game = new Game();
             Game.AddRoll(1);
             Game.AddRoll(4);
@@ -36,19 +36,19 @@
             Game.AddRoll(2);
             Game.AddRoll(8); //spare
             Game.AddRoll(6);
-           
+            Console.WriteLine("__________________________________________________");
+            Console.WriteLine("__________________________________________________");
+            Console.WriteLine("Game Over");
+
+            
+            
+            //var Game2 = new Game();
+
             //for (int i = 0; i <= 10; i++)
             //{
-            //    Game.AddRoll(10);
+            //    Game2.AddRoll(10);
             //}
-
-            //Game.AddRoll(10);
-            //Game.AddRoll(10);
-            //Game.AddRoll(5);
-
-
-
-
+            //Console.WriteLine("Game Over");
 
             //while (!Game.Over())
             //{
@@ -65,12 +65,10 @@
             //    Game.AddRoll(10);
 
             //}
-            Console.WriteLine("Game Over");
             Console.WriteLine($"Total score: {Game.TotalScore()}");
-            //Console.WriteLine($"Current Frame: {Game.Number}");
-            //Console.WriteLine($"Bonus Score: {Game.BonusScore}");
-            //Console.WriteLine($"FirstRoll Score: {frame.FirstRoll}");
-
+            Console.WriteLine("__________________________________________________");
+            Console.WriteLine("__________________________________________________");
+            //Console.WriteLine($"Total score Game Two: {Game2.TotalScore()}");
         }
     }
 }

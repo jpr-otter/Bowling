@@ -26,7 +26,22 @@ namespace bowling
             return Number;
         }
 
+        public bool IsFinalFrame()
+        {
+            return Number == 10;
+        }
 
+        public bool IsFinished()
+        {
+            if (IsFinalFrame())
+            {
+                return CurrentTry == 3 || (CurrentTry == 2 && !IsSpare() && !IsStrike());
+            }
+            else
+            {
+                return IsStrike() || IsSpare() || CurrentTry == 2;
+            }
+        }
 
         public bool IsStrike()
         {
@@ -51,72 +66,65 @@ namespace bowling
             }
             else if (CurrentTry == 1)
             {
-                if (Number == 10 && (IsStrike() || IsSpare()))
+                if (Number == 10 && IsStrike())
                 {
                     ThirdRoll = pins;
                 }
                 else if (IsStrike())
                 {
-                    throw new Exception("Ist ein Strike geht nicht");
+                    throw new Exception("Another Strike is not allowed!");
                 }
 
                 SecondRoll = pins;
                 CurrentTry++;
             }
+            else if (Number == 10 && IsSpare() && CurrentTry == 2)
+            {
+                ThirdRoll = pins;
+                CurrentTry++;
+            }
             else
             {
-                throw new Exception("Nur zwei Würfe zulässig");
+                throw new Exception("Only two throws valid!");
             }
         }
 
         public int Score()
-        {            
-            if (IsSpare() && Number != 10)
+        {
+            if (IsSpare())
             {
-                BonusScore = NextFrame.FirstRoll;
-            }
-
-            if (IsStrike())
-            {
-                if (Number == 10 && IsSpare())
+                if (Number != 10)
                 {
-                    BonusScore = ThirdRoll;
+                    BonusScore = NextFrame.FirstRoll;
                 }
                 else
                 {
-                    if (NextFrame.IsStrike())
+                    BonusScore = ThirdRoll;
+                }
+            }
+
+            if (IsStrike())
+            {                
+                if (NextFrame.IsStrike())
+                {
+                    BonusScore = NextFrame.FirstRoll;
+                    if (Number == 9)
                     {
-                        BonusScore = NextFrame.FirstRoll;
-                        if(Number == 9)
-                        {
-                            BonusScore += NextFrame.ThirdRoll;
-                        }
-                        else
-                        {
-                            BonusScore += NextFrame.NextFrame.FirstRoll;
-                        }
+                        BonusScore += NextFrame.ThirdRoll;
                     }
                     else
                     {
-                        BonusScore = NextFrame.FirstRoll;
-                        BonusScore += NextFrame.SecondRoll;
+                        BonusScore += NextFrame.NextFrame.FirstRoll;
                     }
+                }
+                else
+                {
+                    BonusScore = NextFrame.FirstRoll;
+                    BonusScore += NextFrame.SecondRoll;
                 }
             }
 
             return FirstRoll + SecondRoll + BonusScore;
-        }
-
-        //public int _Score()
-        //{
-        //    if (ThirdRoll != -1)
-        //    {
-        //        return FirstRoll + SecondRoll + ThirdRoll + BonusScore;
-        //    }
-        //    else
-        //    {
-        //        return FirstRoll + SecondRoll + BonusScore;
-        //    }
-        //}        
+        }        
     }
 }

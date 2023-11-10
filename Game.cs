@@ -21,13 +21,16 @@ namespace bowling
 
         public void AddRoll(int pins)
         {
-            Frames[currentFrame].AddRoll(pins);
-            Console.WriteLine($"Current Frame: {currentFrame}");
-            if ((Frames[currentFrame].IsStrike() && Frames[currentFrame].Number != 10) || Frames[currentFrame].CurrentTry == 2)
+            var frame = Frames[currentFrame];
+            frame.AddRoll(pins);
+
+            Console.WriteLine($"Current Frame: {currentFrame}   |   Pins {pins}");
+            
+            if (frame.IsFinished())
             {
                 currentFrame++;
             }
-      
+
         }
 
         public Frame CurrentFrame()
@@ -41,7 +44,17 @@ namespace bowling
             foreach (Frame frame in Frames)
             {
                 totalScore += frame.Score();
-                Console.WriteLine(frame.Score());
+                Console.WriteLine("__________________________________________________");
+                if(frame.Number < 10 && frame.Score() < 10)
+                {
+                    Console.WriteLine($"{frame.Number} - {frame.Score()}  | {totalScore}");
+                }
+                else
+                {
+                    Console.WriteLine($"{frame.Number} - {frame.Score()} | {totalScore}");
+                }
+                Console.WriteLine("__________________________________________________");
+
             }
             // Lambda, sonst forloop 
             //return Frames.Sum(x => x.Score);
